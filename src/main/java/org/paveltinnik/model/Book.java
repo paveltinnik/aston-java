@@ -9,9 +9,12 @@ public class Book {
     private Author author; // ManyToOne relationship
     private Set<Genre> genres = new HashSet<>(); // ManyToMany relationship
 
-    public Book(Long id, String title) {
+    public Book() {}
+
+    public Book(Long id, String title, Author author) {
         this.id = id;
         this.title = title;
+        this.author = author;
     }
 
     public Long getId() {
@@ -44,10 +47,5 @@ public class Book {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
-    }
-
-    public void addGenre(Genre genre) {
-        genres.add(genre);
-        genre.getBooks().add(this);
     }
 }

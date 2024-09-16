@@ -1,89 +1,58 @@
 package org.paveltinnik.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.paveltinnik.dto.AuthorDTO;
 import org.paveltinnik.service.AuthorService;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 
-//@WebServlet("/api/authors/*")
 public class AuthorServlet extends HttpServlet {
-    private AuthorService authorService;
+
+    private final AuthorService authorService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public AuthorServlet(AuthorService authorService) {
         this.authorService = authorService;
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String path = request.getPathInfo();
-        if (path != null && path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        Long id = Long.parseLong(path);
-        AuthorDTO authorDTO = authorService.getAuthorById(id);
-        if (authorDTO != null) {
-            response.setContentType("application/json");
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(response.getWriter(), authorDTO);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        if (id != null) {
+            AuthorDTO author = authorService.findById(Long.parseLong(id));
+            resp.setContentType("application/json");
+            resp.getWriter().write(objectMapper.writeValueAsString(author));
         } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().write("ID not provided");
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try (InputStream body = request.getInputStream()) {
-            ObjectMapper mapper = new ObjectMapper();
-            AuthorDTO authorDTO = mapper.readValue(body, AuthorDTO.class);
-            authorDTO = authorService.createAuthor(authorDTO);
-            response.setContentType("application/json");
-            mapper.writeValue(response.getWriter(), authorDTO);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid request");
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        AuthorDTO authorDTO = objectMapper.readValue(req.getReader(), AuthorDTO.class);
+        authorService.save(authorDTO);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String path = request.getPathInfo();
-        if (path != null && path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        Long id = Long.parseLong(path);
-        try (InputStream body = request.getInputStream()) {
-            ObjectMapper mapper = new ObjectMapper();
-            AuthorDTO authorDTO = mapper.readValue(body, AuthorDTO.class);
-            authorDTO.setId(id);
-            authorDTO = authorService.updateAuthor(authorDTO);
-            response.setContentType("application/json");
-            mapper.writeValue(response.getWriter(), authorDTO);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid request");
-        }
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        AuthorDTO authorDTO = objectMapper.readValue(req.getReader(), AuthorDTO.class);
+        authorService.update(authorDTO);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String path = request.getPathInfo();
-        if (path != null && path.startsWith("/")) {
-            path = path.substring(1);
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        if (id != null) {
+            authorService.delete(Long.parseLong(id));
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            resp.getWriter().write("ID not provided");
         }
-        Long id = Long.parseLong(path);
-        authorService.deleteAuthor(id);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

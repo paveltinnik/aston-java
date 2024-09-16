@@ -1,69 +1,54 @@
-package org.paveltinnik.dao;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.paveltinnik.model.Author;
-import org.paveltinnik.config.DbConfig;
-
-import java.sql.*;
-
-public class AuthorDao {
-    private HikariDataSource dataSource;
-
-    public AuthorDao(HikariDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    public Author findById(Long id) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM authors WHERE id = ?")) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Author author = new Author(resultSet.getLong("id"), resultSet.getString("name"));
-                return author;
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public Author create(Author author) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO authors (name) VALUES (?)",
-                     Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, author.getName());
-            statement.executeUpdate();
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                author.setId(generatedKeys.getLong(1));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return author;
-    }
-
-    public Author update(Author author) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("UPDATE authors SET name = ? WHERE id = ?")) {
-            statement.setString(1, author.getName());
-            statement.setLong(2, author.getId());
-            statement.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return author;
-    }
-
-    public void delete(Long id) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM authors WHERE id = ?")) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-}
+//package org.paveltinnik.dao;
+//
+//import org.paveltinnik.model.Author;
+//
+//import java.sql.*;
+//import java.util.HashSet;
+//import java.util.Set;
+//
+//public class AuthorDao {
+//    private final Connection connection;
+//
+//    public AuthorDao(Connection connection) {
+//        this.connection = connection;
+//    }
+//
+//    public Author save(Author author) throws SQLException {
+//        String sql = "INSERT INTO authors (name) VALUES (?)";
+//        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//            stmt.setString(1, author.getName());
+//            stmt.executeUpdate();
+//            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+//                if (generatedKeys.next()) {
+//                    author.setId(generatedKeys.getLong(1));
+//                }
+//            }
+//        }
+//        return author;
+//    }
+//
+//    public Set<Author> findAll() throws SQLException {
+//        Set<Author> authors = new HashSet<>();
+//        String sql = "SELECT * FROM authors";
+//        try (Statement stmt = connection.createStatement();
+//             ResultSet rs = stmt.executeQuery(sql)) {
+//            while (rs.next()) {
+//                Author author = new Author();
+//                author.setId(rs.getLong("id"));
+//                author.setName(rs.getString("name"));
+//                authors.add(author);
+//            }
+//        }
+//        return authors;
+//    }
+//
+//    public void delete(Long id) throws SQLException {
+//        String sql = "DELETE FROM authors WHERE id = ?";
+//        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+//            stmt.setLong(1, id);
+//            stmt.executeUpdate();
+//        }
+//    }
+//
+//    // Другие методы, как update и т.д.
+//}

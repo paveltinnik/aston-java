@@ -8,6 +8,8 @@ public class Genre {
     private String name;
     private Set<Book> books = new HashSet<>(); // ManyToMany relationship
 
+    public Genre() {}
+
     public Genre(Long id, String name) {
         this.id = id;
         this.name = name;

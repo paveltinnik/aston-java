@@ -1,39 +1,18 @@
 package org.paveltinnik.service;
 
-import org.paveltinnik.exception.ResourceNotFoundException;
-import org.paveltinnik.model.Author;
-import org.paveltinnik.dao.AuthorDao;
 import org.paveltinnik.dto.AuthorDTO;
-import org.paveltinnik.mapper.CustomMapper;
 
-public class AuthorService {
-    private AuthorDao authorDao;
+import java.sql.SQLException;
+import java.util.List;
 
-    public AuthorService(AuthorDao authorDao) {
-        this.authorDao = authorDao;
-    }
+public interface AuthorService {
+    void save(AuthorDTO authorDTO);
 
-    public AuthorDTO getAuthorById(Long id) {
-        Author author = authorDao.findById(id);
-        if (author != null) {
-            return new AuthorDTO(author.getId(), author.getName());
-        }
-        return null;
-    }
+    AuthorDTO findById(Long id);
 
-    public AuthorDTO createAuthor(AuthorDTO authorDTO) {
-        Author author = new Author(null, authorDTO.getName());
-        author = authorDao.create(author);
-        return new AuthorDTO(author.getId(), author.getName());
-    }
+    List<AuthorDTO> findAll();
 
-    public AuthorDTO updateAuthor(AuthorDTO authorDTO) {
-        Author author = new Author(authorDTO.getId(), authorDTO.getName());
-        author = authorDao.update(author);
-        return new AuthorDTO(author.getId(), author.getName());
-    }
+    void update(AuthorDTO authorDTO);
 
-    public void deleteAuthor(Long id) {
-        authorDao.delete(id);
-    }
+    void delete(Long id);
 }

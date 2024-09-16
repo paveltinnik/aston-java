@@ -5,7 +5,9 @@ import java.util.Set;
 public class AuthorDTO {
     private Long id;
     private String name;
-    private Set<Long> bookIds; // Book IDs instead of full Book objects
+    private Set<Long> bookIds; // IDs of books authored by this author
+
+    public AuthorDTO() {}
 
     public AuthorDTO(Long id, String name, Set<Long> bookIds) {
         this.id = id;
@@ -29,5 +31,11 @@ public class AuthorDTO {
         this.name = name;
     }
 
+    public Set<Long> getBookIds() {
+        return bookIds;
+    }
 
+    public void setBookIds(Set<Long> bookIds) {
+        this.bookIds = bookIds;
+    }
 }

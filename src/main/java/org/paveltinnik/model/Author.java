@@ -6,7 +6,9 @@ import java.util.Set;
 public class Author {
     private Long id;
     private String name;
-    private Set<Book> books = new HashSet<>(); // OneToMany relationship
+    private Set<Book> books = new HashSet<>();
+
+    public Author() {}
 
     public Author(Long id, String name) {
         this.id = id;
@@ -35,10 +37,5 @@ public class Author {
 
     public void setBooks(Set<Book> books) {
         this.books = books;
-    }
-
-    public void addBook(Book book) {
-        books.add(book);
-        book.setAuthor(this);
     }
 }

@@ -5,14 +5,16 @@ import java.util.Set;
 public class BookDTO {
     private Long id;
     private String title;
-    private AuthorDTO author;
-    private Set<GenreDTO> genres;
+    private Long authorId; // ID of the author
+    private Set<Long> genreIds; // IDs of genres associated with this book
 
-    public BookDTO(Long id, String title, AuthorDTO author, Set<GenreDTO> genres) {
+    public BookDTO() {}
+
+    public BookDTO(Long id, String title, Long authorId, Set<Long> genreIds) {
         this.id = id;
         this.title = title;
-        this.author = author;
-        this.genres = genres;
+        this.authorId = authorId;
+        this.genreIds = genreIds;
     }
 
     public Long getId() {
@@ -31,19 +33,19 @@ public class BookDTO {
         this.title = title;
     }
 
-    public AuthorDTO getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(AuthorDTO author) {
-        this.author = author;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
-    public Set<GenreDTO> getGenres() {
-        return genres;
+    public Set<Long> getGenreIds() {
+        return genreIds;
     }
 
-    public void setGenres(Set<GenreDTO> genres) {
-        this.genres = genres;
+    public void setGenreIds(Set<Long> genreIds) {
+        this.genreIds = genreIds;
     }
 }
