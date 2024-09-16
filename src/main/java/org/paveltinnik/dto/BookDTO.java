@@ -1,14 +1,18 @@
 package org.paveltinnik.dto;
 
+import java.util.Set;
+
 public class BookDTO {
     private Long id;
     private String title;
     private AuthorDTO author;
+    private Set<GenreDTO> genres;
 
-    public BookDTO(Long id, String title, AuthorDTO author) {
+    public BookDTO(Long id, String title, AuthorDTO author, Set<GenreDTO> genres) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.genres = genres;
     }
 
     public Long getId() {
@@ -33,5 +37,13 @@ public class BookDTO {
 
     public void setAuthor(AuthorDTO author) {
         this.author = author;
+    }
+
+    public Set<GenreDTO> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<GenreDTO> genres) {
+        this.genres = genres;
     }
 }

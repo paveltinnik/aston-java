@@ -1,14 +1,17 @@
-package org.paveltinnik;
+package org.paveltinnik.model;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Book {
     private Long id;
     private String title;
-    private Author author; // Связь ManyToOne
+    private Author author; // ManyToOne relationship
+    private Set<Genre> genres = new HashSet<>(); // ManyToMany relationship
 
-    public Book(Long id, String title, Author author) {
+    public Book(Long id, String title) {
         this.id = id;
         this.title = title;
-        this.author = author;
     }
 
     public Long getId() {
@@ -33,5 +36,18 @@ public class Book {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+        genre.getBooks().add(this);
     }
 }

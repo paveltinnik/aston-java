@@ -2,26 +2,21 @@ package org.paveltinnik.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.paveltinnik.dao.AuthorDao;
-import org.paveltinnik.dao.BookDao;
-import org.paveltinnik.dto.BookDTO;
-import org.paveltinnik.service.AuthorService;
-import org.paveltinnik.service.BookService;
+import org.paveltinnik.dto.GenreDTO;
+import org.paveltinnik.service.GenreService;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 
-//@WebServlet("/api/books/*")
-public class BookServlet extends HttpServlet {
-    private BookService bookService;
+public class GenreServlet extends HttpServlet {
+    private GenreService genreService;
 
-    public BookServlet(BookService bookService) {
-        this.bookService = bookService;
+    public GenreServlet(GenreService genreService) {
+        this.genreService = genreService;
     }
 
     @Override
@@ -32,11 +27,11 @@ public class BookServlet extends HttpServlet {
             path = path.substring(1);
         }
         Long id = Long.parseLong(path);
-        BookDTO bookDTO = bookService.getBookById(id);
-        if (bookDTO != null) {
+        GenreDTO genreDTO = genreService.getGenreById(id);
+        if (genreDTO != null) {
             response.setContentType("application/json");
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(response.getWriter(), bookDTO);
+            mapper.writeValue(response.getWriter(), genreDTO);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -47,10 +42,10 @@ public class BookServlet extends HttpServlet {
             throws ServletException, IOException {
         try (InputStream body = request.getInputStream()) {
             ObjectMapper mapper = new ObjectMapper();
-            BookDTO bookDTO = mapper.readValue(body, BookDTO.class);
-            bookDTO = bookService.createBook(bookDTO);
+            GenreDTO genreDTO = mapper.readValue(body, GenreDTO.class);
+            genreDTO = genreService.createGenre(genreDTO);
             response.setContentType("application/json");
-            mapper.writeValue(response.getWriter(), bookDTO);
+            mapper.writeValue(response.getWriter(), genreDTO);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid request");
@@ -67,11 +62,11 @@ public class BookServlet extends HttpServlet {
         Long id = Long.parseLong(path);
         try (InputStream body = request.getInputStream()) {
             ObjectMapper mapper = new ObjectMapper();
-            BookDTO bookDTO = mapper.readValue(body, BookDTO.class);
-            bookDTO.setId(id);
-            bookDTO = bookService.updateBook(bookDTO);
+            GenreDTO genreDTO = mapper.readValue(body, GenreDTO.class);
+            genreDTO.setId(id);
+            genreDTO = genreService.updateGenre(genreDTO);
             response.setContentType("application/json");
-            mapper.writeValue(response.getWriter(), bookDTO);
+            mapper.writeValue(response.getWriter(), genreDTO);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid request");
@@ -86,7 +81,7 @@ public class BookServlet extends HttpServlet {
             path = path.substring(1);
         }
         Long id = Long.parseLong(path);
-        bookService.deleteBook(id);
+        genreService.deleteGenre(id);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

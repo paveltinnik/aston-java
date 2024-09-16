@@ -20,6 +20,8 @@ dependencies {
 
     compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
+
     testImplementation("org.mockito:mockito-core:5.13.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

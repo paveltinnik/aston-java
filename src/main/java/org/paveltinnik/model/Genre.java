@@ -1,14 +1,14 @@
-package org.paveltinnik;
+package org.paveltinnik.model;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class Author {
+public class Genre {
     private Long id;
     private String name;
-    private Set<Book> books = new HashSet<>(); // Связь OneToMany
+    private Set<Book> books = new HashSet<>(); // ManyToMany relationship
 
-    public Author(Long id, String name) {
+    public Genre(Long id, String name) {
         this.id = id;
         this.name = name;
     }
